@@ -1,55 +1,94 @@
-import { useState } from 'react'
-import './App.css'
 
-interface Student {
-  id: number;
-  name: string;
-}
 
-function getStudent() {
-  return new Promise<Student[]>((resolve, reject) => {
-    setTimeout(() => {
-      const success = true
-
-      if (success) {
-        resolve([
-          {"id": 1, name : "Maga"},
-          {"id": 2, name : "Amina"},
-          {"id": 3, name : "James"},
-        ]);
-      } else {
-        reject(new Error("Не удалось загрузить"))
-      }
-    }, 2000);
-  })
-}
+import { useEffect, useState } from "react";
+import { getBooksMock, type Books } from "./api/books";
 
 function App() {
-  const [students, setStudents] = useState<Student[]>([]);
+  const [books, setBooks] = useState<Books[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  async function loadStudent() {
-    getStudent()
-      .then((data) => {
-        setStudents(data);
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+  useEffect(() => {
+    async function loadBooks() {
+      const data = (await getBooksMock()) as Books[];
+      setBooks(data);
+      setLoading(false);
     }
-  
+
+    loadBooks();
+  }, []);
+
   return (
-    <>
-      <button onClick={loadStudent}>Показать студентов</button>
-
-      {students.map((student) => {
-        return <p key={student.id}>{student.name}</p>
-      })}
-
-    </>
-  )
+    <main>
+      <h1>Учебная полка</h1>
+      {loading ? (
+        <p>Загружаем книги…</p>
+      ) : (
+        <ul>
+          {books.map((book) => (
+            <li key={book.id}>{book.title} — {book.author}</li>
+          ))}
+        </ul>
+      )}
+    </main>
+  );
 }
 
-export default App
+export default App;
+
+
+// import { useState } from 'react'
+// import './App.css'
+
+
+// interface Student {
+//   id: number;
+//   name: string;
+// }
+
+// function getStudent() {
+//   return new Promise<Student[]>((resolve, reject) => {
+//     setTimeout(() => {
+//       const success = true
+
+//       if (success) {
+//         resolve([
+//           {"id": 1, name : "Maga"},
+//           {"id": 2, name : "Amina"},
+//           {"id": 3, name : "James"},
+//         ]);
+//       } else {
+//         reject(new Error("Не удалось загрузить"))
+//       }
+//     }, 2000);
+//   })
+// }
+
+// function App() {
+//   const [students, setStudents] = useState<Student[]>([]);
+
+//   async function loadStudent() {
+//     getStudent()
+//       .then((data) => {
+//         setStudents(data);
+//       })
+//       .catch((error) => {
+//         console.log(error.message);
+//       });
+//     }
+  
+//   return (
+//     <>
+//       <button onClick={loadStudent}>Показать студентов</button>
+
+//       {students.map((student) => {
+//         return <p key={student.id}>{student.name}</p>
+//       })}
+
+//     </>
+//   )
+// }
+
+// export default App
 
 
 // class Car:
@@ -66,19 +105,19 @@ export default App
 // tesla.drive
 
 
-const promis = new Promise<number>((resolve, reject) => {
-    setTimeout(() => {
-      resolve(10);
-    }, 2000)  
-  })
+// const promis = new Promise<number>((resolve, reject) => {
+//     setTimeout(() => {
+//       resolve(10);
+//     }, 2000)  
+//   })
 
-function sum() {
-  const x = 2
-  x + 6
-}
-const a = (x, y) => {
-  return x + y
-}
+// function sum() {
+//   const x = 2
+//   x + 6
+// }
+// const a = (x, y) => {
+//   return x + y
+// }
   // promis
   //   .then((result) => {
   //     const res1 = result + 5; 
